@@ -59,6 +59,30 @@ public:
 		awaitForClick = false;
 	}
 
+	void manageTurn() {
+		if (isFirstMove) {
+			installPlayers();
+			isFirstMove = false;
+			return;
+		}
+		if (BoardHelper::isGameFinished(board)) {
+			gameEnd();
+			return;
+		}
+		if (BoardHelper::hasAnyMoves(board, player)) {
+			if (getPlayer()->isHuman()) {
+				awaitForClick = true;
+			}
+			else {
+				AImove();
+			}
+		}
+		else {
+			player = player == 1 ? 2 : 1;
+			legalMoves = BoardHelper::getAllLegalMoves(board, player);
+		}
+	}
+
 	void gameEnd() {
 		int score1 = BoardHelper::getScore(board, 1), score2 = BoardHelper::getScore(board, 2);
 		cout << "Game is finished" << endl;
@@ -82,6 +106,8 @@ public:
 		if (player2Name == "AI Dynamic") player2 = new AIDynamic(2, depth);
 	}
 
+
+private:
 	Player* getPlayer() {
 		return player == 1 ? player1 : player2;
 	}
@@ -89,30 +115,6 @@ public:
 	string name(int player) {
 		if (player == 1) return "Black(" + player1->name() + ")";
 		return "White(" + player2->name() + ")";
-	}
-
-	void manageTurn() {
-		if (isFirstMove) {
-			installPlayers();
-			isFirstMove = false;
-			return;
-		}
-		if (BoardHelper::isGameFinished(board)) {
-			gameEnd();
-			return;
-		}
-		if (BoardHelper::hasAnyMoves(board, player)) {
-			if (getPlayer()->isHuman()) {
-				awaitForClick = true;
-			}
-			else {
-				AImove();
-			}
-		}
-		else {
-			player = player == 1 ? 2 : 1;
-			legalMoves = BoardHelper::getAllLegalMoves(board, player);
-		}
 	}
 
 	void AImove() {

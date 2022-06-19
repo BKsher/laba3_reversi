@@ -5,29 +5,6 @@ using namespace std;
 class BoardHelper
 {
 public:
-	static int reversedDir(int** board, int player, int x, int y, int vx, int vy) {
-		int op = player == 1 ? 2 : 1;
-		int i = x + vx, j = y + vy;
-		int steps = 0;
-		while (i >= 0 && j >= 0 && i < 8 && j < 8 && board[i][j] == op) i += vx, j += vy, steps++;
-		if (i < 0 || j < 0 || i > 7 || j > 7 || board[i][j] == 0 || steps < 1) return 0;
-		return steps;
-	}
-
-	static bool checkdir(int** board, int player, int x, int y, int vx, int vy) {
-		return reversedDir(board, player, x, y, vx, vy) > 0;
-	}
-
-	static void filldir(int** board, int player, int x, int y, int vx, int vy) {
-		if (!checkdir(board, player, x, y, vx, vy)) return;
-		int op = player == 1 ? 2 : 1;
-		int i = x + vx, j = y + vy;
-		while (board[i][j] == op) {
-			board[i][j] = player;
-			i += vx;
-			j += vy;
-		}
-	}
 
 	static void fillAlldir(int** board, int player, int x, int y) {
 		filldir(board, player, x, y, -1, 0);
@@ -89,6 +66,31 @@ public:
 		if (hasAnyMoves(board, 1)) return false;
 		if (hasAnyMoves(board, 2)) return false;
 		return true;
+	}
+
+private:
+	static int reversedDir(int** board, int player, int x, int y, int vx, int vy) {
+		int op = player == 1 ? 2 : 1;
+		int i = x + vx, j = y + vy;
+		int steps = 0;
+		while (i >= 0 && j >= 0 && i < 8 && j < 8 && board[i][j] == op) i += vx, j += vy, steps++;
+		if (i < 0 || j < 0 || i > 7 || j > 7 || board[i][j] == 0 || steps < 1) return 0;
+		return steps;
+	}
+
+	static bool checkdir(int** board, int player, int x, int y, int vx, int vy) {
+		return reversedDir(board, player, x, y, vx, vy) > 0;
+	}
+
+	static void filldir(int** board, int player, int x, int y, int vx, int vy) {
+		if (!checkdir(board, player, x, y, vx, vy)) return;
+		int op = player == 1 ? 2 : 1;
+		int i = x + vx, j = y + vy;
+		while (board[i][j] == op) {
+			board[i][j] = player;
+			i += vx;
+			j += vy;
+		}
 	}
 };
 
